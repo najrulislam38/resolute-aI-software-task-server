@@ -25,12 +25,24 @@ async function run() {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
 
-    const userCollection = client.db("usersCollection").collection("users");
+    const userCollection = client.db("ResoluteAiDB").collection("users");
+
+    // userCollection api
+    app.get("/users", async (req, res) => {
+      try {
+        const result = await userCollection.find().toArray();
+        res.send(result);
+      } catch (error) {
+        console.log(error.message);
+      }
+    });
 
     app.post("/users", async (req, res) => {
       try {
         const user = req.body;
         console.log(user);
+        const result = await userCollection.insertOne(user);
+        res.send(result);
       } catch (error) {
         console.log(error.message);
       }
