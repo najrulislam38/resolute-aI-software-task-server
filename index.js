@@ -26,6 +26,9 @@ async function run() {
     await client.connect();
 
     const userCollection = client.db("ResoluteAiDB").collection("users");
+    const applicationCollection = client
+      .db("ResoluteAiDB")
+      .collection("applications");
 
     // userCollection api
     app.get("/users", async (req, res) => {
@@ -40,8 +43,27 @@ async function run() {
     app.post("/users", async (req, res) => {
       try {
         const user = req.body;
-        console.log(user);
         const result = await userCollection.insertOne(user);
+        res.send(result);
+      } catch (error) {
+        console.log(error.message);
+      }
+    });
+
+    // ApplicationCollection api
+    app.get("/applications", async (req, res) => {
+      try {
+        const result = await applicationCollection.find().toArray();
+        res.send(result);
+      } catch (error) {
+        console.log(error.message);
+      }
+    });
+
+    app.post("/applications", async (req, res) => {
+      try {
+        const user = req.body;
+        const result = await applicationCollection.insertOne(user);
         res.send(result);
       } catch (error) {
         console.log(error.message);
